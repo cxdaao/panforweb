@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- mybatis框架的运行配置信息 -->
+<configuration>
+<!-- 注意:由于是ssm框架整合。spring是ioc容器，所以数据库连接信息，数据源完全交给spring来进行实例化 -->
+<!-- 定义别名 -->
+<typeAliases>
+<package name="com.bkd.edu.model"/>
+</typeAliases>
+
+
+</configuration>
