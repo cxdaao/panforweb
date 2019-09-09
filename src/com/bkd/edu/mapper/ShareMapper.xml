@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bkd.edu.mapper.ShareMapper" >
+  <resultMap id="BaseResultMap" type="com.bkd.edu.model.Share" >
+    <id column="share_id" property="shareId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="recuser_id" property="recuserId" jdbcType="INTEGER" />
+    <result column="file_id" property="fileId" jdbcType="INTEGER" />
+    <result column="sharetime" property="sharetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    share_id, user_id, recuser_id, file_id, sharetime
+  </sql>
+  
+   <!-- 查询所有分享 -->
+  <select id="findShareFileIdByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from share
+    where user_id = #{recuserId,jdbcType=INTEGER}
+  </select>
+  
+  
+    <!-- 查询所有收到的分享 -->
+  <select id="findShareByRevid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from share
+    where recuser_id = #{recuserId,jdbcType=INTEGER}
+  </select>
+
+  <!-- 通过用户id查询所有分享 -->
+  <select id="findShareByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from share
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 插入分享sql语句 -->
+  <insert id="insertShare" parameterType="Share">
+  insert into share
+  (user_id,
+   recuser_id,
+   file_id,
+   sharetime)
+  values
+  (#{userId,jdbcType=INTEGER},
+   #{recuserId,jdbcType=INTEGER}, 
+   #{fileId,jdbcType=INTEGER},
+   #{sharetime,jdbcType=TIMESTAMP})
+  </insert>
+  <!-- ............................................................................. -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from share
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from share
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bkd.edu.model.Share" >
+    insert into share (share_id, user_id, recuser_id, 
+      file_id, sharetime)
+    values (#{shareId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{recuserId,jdbcType=INTEGER}, 
+      #{fileId,jdbcType=INTEGER}, #{sharetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bkd.edu.model.Share" >
+    insert into share
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shareId != null" >
+        share_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="recuserId != null" >
+        recuser_id,
+      </if>
+      <if test="fileId != null" >
+        file_id,
+      </if>
+      <if test="sharetime != null" >
+        sharetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shareId != null" >
+        #{shareId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="recuserId != null" >
+        #{recuserId,jdbcType=INTEGER},
+      </if>
+      <if test="fileId != null" >
+        #{fileId,jdbcType=INTEGER},
+      </if>
+      <if test="sharetime != null" >
+        #{sharetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bkd.edu.model.Share" >
+    update share
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="recuserId != null" >
+        recuser_id = #{recuserId,jdbcType=INTEGER},
+      </if>
+      <if test="fileId != null" >
+        file_id = #{fileId,jdbcType=INTEGER},
+      </if>
+      <if test="sharetime != null" >
+        sharetime = #{sharetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bkd.edu.model.Share" >
+    update share
+    set user_id = #{userId,jdbcType=INTEGER},
+      recuser_id = #{recuserId,jdbcType=INTEGER},
+      file_id = #{fileId,jdbcType=INTEGER},
+      sharetime = #{sharetime,jdbcType=TIMESTAMP}
+    where share_id = #{shareId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bkd.edu.mapper.FileMapper" >
+  <resultMap id="BaseResultMap" type="com.bkd.edu.model.File" >
+    <id column="file_id" property="fileId" jdbcType="INTEGER" />
+    <result column="filename" property="filename" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="icon" property="icon" jdbcType="INTEGER" />
+    <result column="subfix" property="subfix" jdbcType="VARCHAR" />
+    <result column="webpath" property="webpath" jdbcType="VARCHAR" />
+    <result column="realpath" property="realpath" jdbcType="VARCHAR" />
+    <result column="recycle" property="recycle" jdbcType="INTEGER" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    file_id, filename, user_id, icon, subfix, webpath, realpath, recycle, updatetime
+  </sql>
+
+
+  <update id="pasteFile" parameterType="com.bkd.edu.model.File" >
+    update file
+    set
+    webpath = #{webpath,jdbcType=VARCHAR}
+    where file_id = #{fileId,jdbcType=INTEGER}
+  </update>
+  
+
+  <select id="countfolder" resultType="java.lang.Integer" parameterType="com.bkd.edu.model.File">
+  select
+  count(1)
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and recycle = 0 and subfix='folder' and webpath = #{webpath,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <select id="findTrashFileByUid" resultMap="BaseResultMap" parameterType="com.bkd.edu.model.File">
+  select 
+  <include refid="Base_Column_List" />
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and recycle = 1
+  </select>
+
+      <select id="findMediaFileByUid" resultMap="BaseResultMap" parameterType="com.bkd.edu.model.File">
+  select 
+  <include refid="Base_Column_List" />
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and recycle = 0 and subfix = 'mkv' or subfix = 'avi' or subfix = 'mp4' or subfix = 'rmvb' or subfix = 'wav' or subfix = 'mp3'
+  </select>
+  
+    <select id="findPicFileByUid" resultMap="BaseResultMap" parameterType="com.bkd.edu.model.File">
+  select 
+  <include refid="Base_Column_List" />
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and recycle = 0 and subfix = 'jpg' or subfix = 'jpeg' or subfix = 'png' or subfix = 'bmp' or subfix = 'gif'
+  </select>
+  
+  <select id="findDocFileByUid" resultMap="BaseResultMap" parameterType="com.bkd.edu.model.File">
+  select 
+  <include refid="Base_Column_List" />
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and recycle = 0 and subfix = 'doc' or subfix = 'txt' or subfix = 'docx' or subfix = 'pdf' 
+  </select>
+
+    <select id="findFileByUidAndWebpath" resultMap="BaseResultMap" parameterType="com.bkd.edu.model.File">
+  select 
+  <include refid="Base_Column_List" />
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and webpath = #{webpath,jdbcType=VARCHAR} and recycle = 0
+  </select>
+  
+  <select id="findFileByUid" resultMap="BaseResultMap" parameterType="com.bkd.edu.model.File">
+  select 
+  <include refid="Base_Column_List" />
+  from file
+  where user_id = #{userId,jdbcType=INTEGER} and recycle = 0
+  </select>
+  
+  <insert id="insertFile" parameterType="com.bkd.edu.model.File">
+  insert into 
+  file
+  (filename, user_id,
+   icon, subfix,
+    webpath, realpath,
+     recycle, updatetime)
+  values
+  (#{filename,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{icon,jdbcType=INTEGER}, #{subfix,jdbcType=VARCHAR}, #{webpath,jdbcType=VARCHAR}, 
+      #{realpath,jdbcType=VARCHAR}, #{recycle,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <select id="findFileByFileid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from file
+    where file_id = #{fileId,jdbcType=INTEGER}
+  </select>
+
+  <!-- ............................................................................. -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from file
+    where file_id = #{fileId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from file
+    where file_id = #{fileId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bkd.edu.model.File" >
+    insert into file (file_id, filename, user_id, 
+      icon, subfix, webpath, 
+      realpath, recycle, updatetime
+      )
+    values (#{fileId,jdbcType=INTEGER}, #{filename,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{icon,jdbcType=INTEGER}, #{subfix,jdbcType=VARCHAR}, #{webpath,jdbcType=VARCHAR}, 
+      #{realpath,jdbcType=VARCHAR}, #{recycle,jdbcType=INTEGER}, #{updatetime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bkd.edu.model.File" >
+    insert into file
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fileId != null" >
+        file_id,
+      </if>
+      <if test="filename != null" >
+        filename,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+      <if test="subfix != null" >
+        subfix,
+      </if>
+      <if test="webpath != null" >
+        webpath,
+      </if>
+      <if test="realpath != null" >
+        realpath,
+      </if>
+      <if test="recycle != null" >
+        recycle,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fileId != null" >
+        #{fileId,jdbcType=INTEGER},
+      </if>
+      <if test="filename != null" >
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=INTEGER},
+      </if>
+      <if test="subfix != null" >
+        #{subfix,jdbcType=VARCHAR},
+      </if>
+      <if test="webpath != null" >
+        #{webpath,jdbcType=VARCHAR},
+      </if>
+      <if test="realpath != null" >
+        #{realpath,jdbcType=VARCHAR},
+      </if>
+      <if test="recycle != null" >
+        #{recycle,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bkd.edu.model.File" >
+    update file
+    <set >
+      <if test="filename != null" >
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=INTEGER},
+      </if>
+      <if test="subfix != null" >
+        subfix = #{subfix,jdbcType=VARCHAR},
+      </if>
+      <if test="webpath != null" >
+        webpath = #{webpath,jdbcType=VARCHAR},
+      </if>
+      <if test="realpath != null" >
+        realpath = #{realpath,jdbcType=VARCHAR},
+      </if>
+      <if test="recycle != null" >
+        recycle = #{recycle,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where file_id = #{fileId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bkd.edu.model.File" >
+    update file
+    set filename = #{filename,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=INTEGER},
+      subfix = #{subfix,jdbcType=VARCHAR},
+      webpath = #{webpath,jdbcType=VARCHAR},
+      realpath = #{realpath,jdbcType=VARCHAR},
+      recycle = #{recycle,jdbcType=INTEGER},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP}
+    where file_id = #{fileId,jdbcType=INTEGER}
+  </update>
+</mapper>
